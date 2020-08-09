@@ -19,7 +19,7 @@ public class SessionIntercepter extends HandlerInterceptorAdapter {
 		HttpSession session = request.getSession();
 
 		User principal = (User) session.getAttribute("principal");
-		if (principal = null) {
+		if (principal == null) {
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("text/html); charset=utf-8");
 			PrintWriter out = response.getWriter();
