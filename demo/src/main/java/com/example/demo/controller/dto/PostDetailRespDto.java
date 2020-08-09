@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.controller.dto;
 
 import java.security.Timestamp;
 
@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 
-public class Post {
+public class PostDetailRespDto {
     
 	private int id;
     private String title;
     private String content;
-    private int userId;
-    private Timestamp createDate;
+    private String username;
+
 	
 	} 

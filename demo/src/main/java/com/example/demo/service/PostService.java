@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.controller.dto.PostDetailRespDto;
 import com.example.demo.model.Post;
 import com.example.demo.repository.PostRepository;
 
@@ -26,9 +27,25 @@ public class PostService {
 			postRepository.save(post);
 		}
 		
-		@Transactional
+		@Transactional(readOnly = true)
 		public List<Post> 목록보기() {
 			return postRepository.findAll();
 		}
+		@Transactional(readOnly = true)
+		public PostDetailRespDto 상세보기(int id) {
+			return postRepository.findOne(id);
+		}
+	
+		@Transactional
+		public void 게시글하나삭제하기(int id) {
+			postRepository.deleteById(id);
+		}
+		
+		@Transactional
+		public void 게시글수정하기(Post post) {
+			postRepository.update(post);
+		}
+		
+		
 		
 }
