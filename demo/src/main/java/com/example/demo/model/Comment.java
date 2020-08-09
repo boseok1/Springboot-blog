@@ -12,13 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 
-public class Post {
-    
-	private int id;
-    private String title;
-    private String content;
-    private int userId;
-    private Timestamp createDate;
-	
-
-	} 
+public class Comment {
+      private int id;
+      private int userId;
+      private int postId;
+      private String content;
+      private Timestamp createDate;
+}
