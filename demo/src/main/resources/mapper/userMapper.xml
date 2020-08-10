@@ -2,18 +2,18 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cos.blog.repository.UserRepository">
- <select id="findById" resultType="com.cos.blog.model.User">
+<mapper namespace="com.example.demo.repository.UserRepository">
+ <select id="findById" resultType="com.example.demo.model.User">
     select * from user WHERE id = #{id}
   </select>
   
    <!-- 컬렉션이어도 resultType에 클래스를 넣자  -->
-  <select id="findAll" resultType="com.cos.blog.model.User">
+  <select id="findAll" resultType="com.example.demo.model.User">
     select * from user;
   </select>
   
    <!-- 컬렉션이어도 resultType에 클래스를 넣자  -->
-  <select id="login" resultType="com.cos.blog.model.User">
+  <select id="login" resultType="com.example.demo.model.User">
     SELECT id, username, email, profile, role, createDate FROM user WHERE username = #{username} and password = #{password};
   </select>
   

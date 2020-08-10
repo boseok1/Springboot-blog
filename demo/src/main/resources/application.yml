@@ -1,9 +1,9 @@
   server:
      
-     port: 8080
+     port: 8090
      servlet:
       
-      context-path: /blog
+      context-path: /
       
   spring:
       mvc:
@@ -13,7 +13,7 @@
 
       datasource:
            url: jdbc:mysql://localhost:3306/spring?serverTimezone=Asia/Seoul
-           username: spring
+           username: root
            password: bitc5600
            driver-class-name: com.mysql.cj.jdbc.Driver
 

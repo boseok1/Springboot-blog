@@ -33,7 +33,7 @@ public class PostService {
 		}
 		@Transactional(readOnly = true)
 		public PostDetailRespDto 상세보기(int id) {
-			return postRepository.findOne(id);
+			return postRepository.findById(id);
 		}
 	
 		@Transactional

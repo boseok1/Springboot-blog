@@ -1,137 +1,115 @@
-let index = { // 여기서는 이벤트 리스너를 바인딩만 하고
-	init : function() {
-
-		$("#btn-save").on("click", ()=> { // 리스너
-			this.save(); // 콜백
+let index = {
+	// 변수는 let 쓰고 ,함수의 이름이 없어도 실행될수밖에 없는 영역에 ()=> 씀
+	init : function(){
+		// 이벤트를 바인딩한다.
+		// 1.리스너
+		$("#btn-save").on("click",()=>{
+			// 콜백 스택
+			this.save();
 		});
 		
-		$("#btn-save").on("click", ()=> { // 리스너
-			this.deleteById(); // 콜백
-		});
-	
-		$("#btn-save").on("click", ()=> { // 리스너
-			this.updateMode(); // 콜백
+		$("#btn-delete").on("click",()=>{
+			this.deleteById();
 		});
 		
-		$("#btn-save").on("click", ()=> { // 리스너
-			this.update(); // 콜백
+		$("#btn-update-mode").on("click",()=>{
+			//글의 readonly를 없애서 수정가능하게 만듬
+			this.updateMode();
 		});
-
+		
+		$("#btn-update").on("click",()=>{
+			this.update();
+		});
+		$("#btn-update").hide();
+		
 	},
-
-	save: function() { // 실제 로직은 여기서 실행
-
-		let data ={
-				title : $("#title").val(),
-				content : $("#content").val(),
-				userId : $("#userId").val()
+	
+	update : function() {
+		let data = {
+				id:$("#id").val(),
+				title:$("#title").val(),
+				content:$("#content").val()
 		};
-
-		$.ajax({ // 주소는 RESTAPI 방식대로 적어야한다 
-
-			type:"post",
-			url: "/post",
-			data: JSON.stringify(data),
-			contentType: "application/json; charset=utf-8",  // http에서는
-																// Content-Type
-																// 라고 씀
-			dataType: "json"  // 스프링은 응답할때 스트링일 경우 무조건 json으로 응답한다
-
-		}).done((resp)=>{
-
-			alert("글쓰기 성공");
-			console.log(resp);
-			location.href="/";
-
-		}).fail((error)=>{
-
-			alert("글쓰기 실패");
-			console.log(error);
-
-		});
-
-	},
-	
-	deleteById: function() {
-		
-		let data ={
-						   id : ${"#id"}.val(),	
-		};
-		
-		$.ajax({ // 주소는 RESTAPI 방식대로 적어야한다 
-
-			type:"delete",
-			url: "/post/"data.id,
-			data: JSON.stringify(data),
-			contentType: "application/json; charset=utf-8",  // http에서는
-																// Content-Type
-																// 라고 씀
-			dataType: "json"  // 스프링은 응답할때 스트링일 경우 무조건 json으로 응답한다
-
-		}).done((resp)=>{
-           if(resp.statusCode === 1) {
-			alert("삭제 성공");			
-			location.href="/";
-         
-           } else {
-        	   alert("권한이 없습니다");
-           }
-			
-			
-		}).fail((error)=>{
-
-			alert("삭제 실패");
-			console.log(error);
-
-		});
-
-	},
-	
-	updateMode : function() {
-		let element = $("#btn-update-mode");
-		element.attr("class", "btn btn-primary");
-		element.attr("id", " btn-update");
-		element.text("수정하기");
-		
-		$("#title").attr("readOnly", false);
-		$("#content").attr("readOnly", false);
-		
-		$("#btn-update").on("click", ()=> { // 리스너
-			this.update(); // 콜백
-		});
-	},
-	
-	update : funtion() {
-		
-		let data ={
-				id : $("#id").val(),
-				title : $("#title").val(),
-				content : $("content").val()			
-		};
-	
-		$.ajax({ // 주소는 RESTAPI 방식대로 적어야한다 
-
-			type:"put",
+		// fetch쓰면 jquery안써도 됨
+		$.ajax({
+			type :"PUT",
 			url: "/post/"+data.id,
-			data: JSON.stringify(data),
-			contentType: "application/json; charset=utf-8",  // http에서는
-																// Content-Type
-																// 라고 씀
-			dataType: "json"  // 스프링은 응답할때 스트링일 경우 무조건 json으로 응답한다
-
+			data : JSON.stringify(data),
+			contentType : "application/json; charset=utf-8",
+			dataType : "json"
 		}).done((resp)=>{
-
-			alert("수정 성공");		
-			location.href="/post/"+data.id; //  get!
-
-		}).fail((error)=>{
-
+			alert("수정 성공");
+			//location.href는 무조건 get 방식이다.
+			location.href="/post/"+data.id;
+			console.log(resp);
+		}).fail(function(error){
 			alert("수정 실패");
 			console.log(error);
-
-		});
-
+		})
+	},
+	
+	updateMode:function(){
+		//id값을 바꿀 수 있다.
+		//리액트할때 여기에 rep만 걸면 변하게하면 된다.
+		$("#btn-update-mode").hide();
+		$("#btn-update").show();
 		
+		$("#title").attr("readOnly",false);
+		$("#content").attr("readOnly",false);
+	},
+	
+	// 이렇게 설계하면 장점 : 버튼 리스너를 새로 만들고 밑에서 처리하면됨
+	save : function() {
+		
+		let data = {
+				title:$("#title").val(),
+				content:$("#content").val(),
+				userId:$("#userId").val()
+		};
+		// fetch쓰면 jquery안써도 됨
+		$.ajax({
+			//
+			type :"POST",
+			url: "/post",
+			// 자바스크립트 오브젝트를 JSON String으로 바꾼것
+			data : JSON.stringify(data),
+			// 스프링이 메세지 컨버터가 작동해서 requestBody를 붙여야함
+			// 그러기 위해서는 스프링에게 컨텍스트 타입을 알려줘야한다. 그래야만 오브젝트로 변환해줌
+			contentType : "application/json; charset=utf-8",
+			// 응답 받는 타입 설정
+			dataType : "json"
+		}).done((resp)=>{
+			alert("글쓰기 성공");
+			location.href="/";
+			console.log(resp);
+		}).fail(function(error){
+			alert("글쓰기 실패");
+			console.log(error);
+		})
+		// 자바스크립트오브젝트 => 제이슨 스트링
+		// JSON.stringify(자바스크립트오브젝트);
+		// 제이슨 스트링 => 자바스크립트 오브젝트
+		// JSON.parse(제이슨스트링);
+	},
+	
+	deleteById : function() {
+		let data = {
+				id:$("#id").val()
+		};
+		// fetch쓰면 jquery안써도 됨
+		$.ajax({
+			//data를 날릴필요 없음.
+			type :"DELETE",
+			url: "/post/"+data.id,
+			dataType : "json"
+		}).done((resp)=>{
+			alert("글쓰기 삭제 성공");
+			location.href="/";
+			console.log(resp);
+		}).fail(function(error){
+			alert("글쓰기 삭제 실패");
+			console.log(error);
+		})
 	}
 	
 }
